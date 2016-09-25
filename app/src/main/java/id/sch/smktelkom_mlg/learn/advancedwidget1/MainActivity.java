@@ -8,37 +8,57 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 public class MainActivity extends AppCompatActivity {
+	private void addEditText(LinearLayout llMain) {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-	    LinearLayout liMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		for (int i = 1; i <= 5; i++) {
+			EditText etNama = new EditText(this);
+			llMain.addView(etNama);
+			etNama.setHint("Isikan Nama Anak");
 
-	    final EditText etNama = new EditText(this);
-	    liMain.addView(etNama);
-	    etNama.setHint("Isikan Nama Anak");
+			EditText etUmur = new EditText(this);
+			llMain.addView(etUmur);
+			etUmur.setHint("Isikan Umur Anak");
+			etUmur.setInputType(InputType.TYPE_CLASS_NUMBER);
+		}
+	}
 
-	    final EditText etUmur = new EditText(this);
-	    liMain.addView(etUmur);
-	    etUmur.setHint("Isikan Umur Anak");
-	    etUmur.setInputType(InputType.TYPE_CLASS_NUMBER);
+	private void doProses(LinearLayout llMain) {
+		String hasil = "";
+		for (int i = 0; i < 5; i++) {
+			EditText etNama = (EditText) llMain.getChildAt(i * 2);
+			EditText etUmur = (EditText) llMain.getChildAt((i * 2) + 1);
 
-	    Button bProses = new Button(this);
-	    bProses.setText("Proses");
-	    liMain.addView(bProses);
-	    final TextView tvHasil = new TextView(this);
-	    liMain.addView(tvHasil);
-	    bProses.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-			    String nama = etNama.getText().toString();
-			    String umur = etUmur.getText().toString();
+			String nama = etNama.getText().toString().trim();
+			String umur = etUmur.getText().toString();
 
-			    tvHasil.setText(nama + " Umur " + umur + " Tahun ");
-		    }
-	    });
-    }
+			if (umur.isEmpty())
+				umur = "0";
+			if (!nama.isEmpty())
+				hasil += "Anak ke - " + (i + 1) + " : " + nama + " umur " + umur + " tahun\n";
+		}
+		TextView tvHasil = (TextView) llMain.getChildAt(11);
+		tvHasil.setText(hasil);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		final LinearLayout llMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		addEditText(llMain);
+		Button bProses = new Button(this);
+		bProses.setText("Proses");
+		llMain.addView(bProses);
+		final TextView tvHasil = new TextView(this);
+		llMain.addView(tvHasil);
+
+		bProses.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				doProses(llMain);
+			}
+		});
+	}
 }
